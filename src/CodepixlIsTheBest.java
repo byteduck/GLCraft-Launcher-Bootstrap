@@ -14,7 +14,7 @@ public class CodepixlIsTheBest {
 	public OutputWindow w;
 	public String newVer = "(Well this is supposed to be a version number... What went wrong?)";
 	
-	public final String bootstrapVer = "1";
+	public final String bootstrapVer = "2";
 	
 	public static void main(String[] args){
 		try {
@@ -34,12 +34,12 @@ public class CodepixlIsTheBest {
 		OutputWindow w = new OutputWindow(j);
 		w.write("Loading Bootstrapper...");
 		w.write("Attempting to delete temp directory...");
-		FileUtils.deleteDirectory(new File(System.getProperty("user.home")+"/GLCraft/temp"));
+		FileUtils.deleteDirectory(new File(System.getProperty("user.home")+File.separator+"GLCraft"+File.separator+"temp"));
 		w.write("Deleted!");
 		w.write("Checking for launcher update...");
-		Files.createDirectories(new File(System.getProperty("user.home")+"/GLCraft/temp").toPath());
-		Files.createDirectories(new File(System.getProperty("user.home")+"/GLCraft/launcher").toPath());
-		Download d = new Download("https://www.codepixl.net/GLCraft/lver.txt", System.getProperty("user.home")+"/GLCraft/temp/lver.txt", w, false);
+		Files.createDirectories(new File(System.getProperty("user.home")+File.separator+"GLCraft"+File.separator+"temp").toPath());
+		Files.createDirectories(new File(System.getProperty("user.home")+File.separator+"GLCraft"+File.separator+"launcher").toPath());
+		Download d = new Download("https://www.codepixl.net/GLCraft/lver.txt", System.getProperty("user.home")+File.separator+"GLCraft"+File.separator+"temp"+File.separator+"lver.txt", w, false);
 		while(d.getStatus() == d.DOWNLOADING){Thread.sleep(10);}
 		boolean newVersion = false;
 		if(d.getStatus() == d.ERROR){
@@ -48,7 +48,7 @@ public class CodepixlIsTheBest {
 			newVersion = evalVer();
 			if(newVersion){
 				w.write("New launcher version: "+newVer);
-				d = new Download("https://www.codepixl.net/GLCraft/launcher.jar",System.getProperty("user.home")+"/GLCraft/launcher/launcher.jar", w, true);
+				d = new Download("https://www.codepixl.net/GLCraft/launcher.jar",System.getProperty("user.home")+File.separator+"GLCraft"+File.separator+"launcher"+File.separator+"launcher.jar", w, true);
 				w.write("Downloading...");
 				while(d.getStatus() == d.DOWNLOADING){Thread.sleep(10);}
 			}else{
@@ -56,7 +56,7 @@ public class CodepixlIsTheBest {
 			}
 		}
 		w.write("Launching...");
-		ProcessBuilder pb = new ProcessBuilder("java","-jar", System.getProperty("user.home")+"\\GLCraft\\launcher\\launcher.jar","bootstrapver:"+bootstrapVer);
+		ProcessBuilder pb = new ProcessBuilder("java","-jar", System.getProperty("user.home")+File.separator+"GLCraft"+File.separator+"launcher"+File.separator+"launcher.jar","bootstrapver:"+bootstrapVer);
         Process p = pb.start();
         w.write("Launched!");
         Thread.sleep(1000);
@@ -65,17 +65,17 @@ public class CodepixlIsTheBest {
 	
 	private boolean evalVer() throws IOException{
 		String cver = FileUtils.readFileToString(new File(System.getProperty("user.home")+"/GLCraft/temp/lver.txt"));
-		File fver = new File(System.getProperty("user.home")+"/GLCraft/launcher/ver.txt");
-		File lfile = new File(System.getProperty("user.home")+"/GLCraft/launcher/launcher.jar");
+		File fver = new File(System.getProperty("user.home")+File.separator+"GLCraft"+File.separator+"launcher"+File.separator+"ver.txt");
+		File lfile = new File(System.getProperty("user.home")+File.separator+"GLCraft"+File.separator+"launcher"+File.separator+"launcher.jar");
 		if(!fver.exists() || !lfile.exists()){
 			fver.getParentFile().mkdirs();
-			FileUtils.copyFile(new File(System.getProperty("user.home")+"/GLCraft/temp/lver.txt"), fver);
+			FileUtils.copyFile(new File(System.getProperty("user.home")+File.separator+"GLCraft"+File.separator+"temp"+File.separator+"lver.txt"), fver);
 			newVer = cver;
 			return true;
 		}
 		String ver = FileUtils.readFileToString(fver);
 		if(!cver.equals(ver)){
-			FileUtils.copyFile(new File(System.getProperty("user.home")+"/GLCraft/temp/lver.txt"), fver);
+			FileUtils.copyFile(new File(System.getProperty("user.home")+File.separator+"GLCraft"+File.separator+"temp"+File.separator+"lver.txt"), fver);
 			newVer = cver;
 			return true;
 		}
